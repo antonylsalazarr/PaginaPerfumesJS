@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Click Confirmation - Lima, Perú</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Estilos para el cuerpo de la página */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: red;
+        }
+
+        /* Estilos para el contenedor del mapa */
+        #map-container {
+            width: 300px; /* Ancho del contenedor del mapa */
+            height: 300px; /* Altura del contenedor del mapa */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Estilos para el mapa dentro del contenedor */
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Función para inicializar el mapa
+        function initMap() {
+            // Coordenadas de Lima, Perú
+            var limaCoords = [-12.0464, -77.0428];
+
+            // Crea un nuevo mapa y lo muestra en el elemento con id "map"
+            var map = L.map('map').setView(limaCoords, 12);
+
+            // Añade una capa de mapa base (en este caso, OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Agrega un listener para capturar los clics en el mapa
+            map.on('click', function(event) {
+                // Mostrar una confirmación con dos botones: Cancelar y Aceptar
+                var confirmed = confirm('¿Deseas ver esta ubicación en Google Maps?');
+
+                // Evaluar la respuesta de la confirmación
+                if (confirmed) {
+                    // Obtener las coordenadas del clic
+                    var lat = event.latlng.lat;
+                    var lng = event.latlng.lng;
+
+                    // Construir la URL de Google Maps con las coordenadas
+                    var googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+                    // Abrir la URL en una nueva pestaña del navegador
+                    window.open(googleMapsUrl, '_blank');
+                }
+            });
+
+            // Ajustar el tamaño del mapa para que se muestre correctamente centrado
+            map.invalidateSize();
+        }
+
+        // Llamar a la función initMap cuando la página esté completamente cargada
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>
